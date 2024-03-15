@@ -259,7 +259,7 @@ POST /api/v1/posts/
 ```
 
 ```bash
-    Body
+Body
     {
         "title": "new post title",
         "body": "new post body "
