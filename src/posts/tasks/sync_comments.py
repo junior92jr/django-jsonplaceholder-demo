@@ -1,0 +1,49 @@
+import logging
+
+from posts.utils.api_clients import CommentsRequestHandler
+from posts.utils.importers import CommentImporter
+from posts.utils.transactions import (
+    CommentBulkCreate,
+    CommentBulkUpdate,
+)
+
+
+logger = logging.getLogger(__name__)
+
+
+def syncronize_comments_task() -> None:
+    """Task that sync comments from the database."""
+
+    comments_handler = CommentsRequestHandler()
+    try:
+        retrieved_comments = comments_handler.get_list_request()
+        logger.info(
+            f"{len(retrieved_comments)} 'Comments' fetched.")
+
+    except Exception as error:
+        logger.error(
+            f'An error occurred when requesting data from API: {error}')
+        raise error
+
+    comment_bulk_create = CommentBulkCreate(chunk_size=100)
+    comment_bulk_update = CommentBulkUpdate(
+        fields_lookup=['name', 'email', 'body', 'post'], chunk_size=100)
+
+    try:
+        comment_importer = CommentImporter(
+            objects_to_insert=retrieved_comments,
+            bulk_create=comment_bulk_create,
+            bulk_update=comment_bulk_update
+        )
+
+        comment_importer.syncronize_data()
+
+        logger.info(
+            f"{comment_bulk_create.total_inserted} 'Comment(s)' inserted.")
+
+        logger.info(
+            f"{comment_bulk_update.total_updated} 'Comment(s)' updated.")
+
+    except Exception as error:
+        logger.error(f"An error occurred when syncronizing 'Posts': {error}")
+        raise error

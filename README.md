@@ -1,1 +1,1 @@
-# posts_service
+# Init
