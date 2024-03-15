@@ -81,6 +81,7 @@ class ObjectImporter(object):
         self._bulk_update.done()
 
     def syncronize_data(self) -> None:
+        """Method that sync object data into the database."""
 
         if not self._validate_objects():
             raise ValueError('Payload structure is not valid.')
