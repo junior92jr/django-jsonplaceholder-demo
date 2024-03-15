@@ -120,6 +120,7 @@ Internally it is creating the data if it not exists otherwise It will Insert or 
 $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
+### Optional
 Internally we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00, 01:00 CET time every day.
 
 ```bash
@@ -130,6 +131,12 @@ Internally we Also set up some Cron Jobs that will run the synchronizing tasks a
     '0 1 * * *',
     'posts.tasks.sync_comments.synchronize_comments_task',
     '>> /cron/django_cron.log 2>&1'
+```
+
+You only need to indicate you want to add them in the container
+
+```bash
+$ docker-compose exec web python manage.py crontab add
 ```
 
 It is possible to check the logs for the Crontabs
@@ -190,4 +197,143 @@ For all endpoints you will need to use `Authorization` Header.
 ```bash
     curl --location 'http://localhost:8000/api/v1/posts/' \
     --header 'Authorization: Bearer eyJhb...EqmQpdY'
+```
+
+
+## Api Usage
+All items contains `created_at` and `updated_at` values. It indicates when where created and updated.
+
+```bash
+    "created_at": "2024-03-15T12:06:19.947938+01:00",
+    "updated_at": "2024-03-15T12:54:41.036391+01:00"
+```
+
+For `Posts` and `Comments`, when using succesfuly the methods `PUT`, `PATCH`, `DELETE`. All changes will be synchronized with the `Fake API` whene running `sync_fake_api_data` or the cronjobs are executed.
+
+```bash
+$ docker-compose exec web python manage.py sync_fake_api_data
+```
+
+### Posts
+The `external_id` is the `id` from the Source where it was imported, if it is `null` means it was created internally.
+
+The `user_id` will contain `99999942` if it was created internally as well.
+
+#### List All
+```bash
+GET /api/v1/posts/
+GET /api/v1/posts/?external_id=1
+GET /api/v1/posts/?external_id=1&user_id=1
+GET /api/v1/posts/?user_id=1
+```
+#### Retrieve by ID
+```bash
+GET /api/v1/posts/1/
+```
+
+#### Create
+```bash
+PUT /api/v1/posts/1/
+```
+
+Body
+```bash
+{
+    "title": "editing title",
+    "body": "editing body",
+}
+```
+
+#### Full/Partial Update
+```bash
+PATCH /api/v1/posts/1/
+```
+
+Body
+```bash
+{
+    "body": "partial edit",
+}
+```
+
+```bash
+POST /api/v1/posts/
+```
+
+Body
+```bash
+{
+    "title": "new post title",
+    "body": "new post body "
+}
+```
+
+#### Delete
+```bash
+DELETE /api/v1/posts/1/
+```
+
+### Comments
+
+The `post` is the `pk` in the database for the existing Post.
+
+#### List All
+
+```bash
+GET /api/v1/comments/
+GET /api/v1/comments/?external_id=1
+GET /api/v1/comments/?post=4
+GET /api/v1/comments/?external_id=1&post=4
+```
+
+#### Retrieve by ID
+```bash
+GET /api/v1/comments/1/
+```
+
+#### Create
+```bash
+POST /api/v1/comments/
+```
+
+Body
+```bash
+{
+    "post": 2,
+    "name": "new comment name",
+    "email": "newemail@mail.com",
+    "body": "new comment body"
+}
+```
+
+#### Full/Partial Update
+```bash
+PUT /api/v1/comments/1/
+```
+
+Body
+```bash
+{
+    "post": 5,
+    "name": "edited new comment name",
+    "email": "editednewemail@mail.com",
+    "body": "edited new comment body"
+}
+```
+
+```bash
+PATCH /api/v1/comments/1/
+```
+
+Body
+```bash
+{
+    "name": "edited new comment name",
+    "email": "editednewemail@mail.com",
+}
+```
+
+#### Delete
+```bash
+DELETE /api/v1/comments/1/
 ```
