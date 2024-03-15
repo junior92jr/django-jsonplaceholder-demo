@@ -1,6 +1,6 @@
 # Rest Service for Placeholder Fake Api
 
-This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally it includes a way to synchronize the data constantly.
+This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally, it includes a way to constantly synchronize the data.
 
 ## Tech Stacks
 * Python 3.11
@@ -10,7 +10,7 @@ This Rest Service creates a simple REST API to interact with the `Fake API in J
 * JWT Authentication
 * Docker/Docker-Componse
 
-## Set up the Project
+## Set up the project
 
 ### Clone the repository
 
@@ -65,7 +65,7 @@ To make sure the app is running correctly open [http://localhost:8000](http://lo
 ### Check database is running
 
 We can confirm that the database was properly created by accessing the database container
-and starting a psql console.
+and starting a PSQL console.
 
 ```bash
 $ docker-compose exec web-db psql -U postgres
@@ -78,7 +78,7 @@ postgres=#
 
 ### Check Django container is running
 
-We can confirm that django container was properly created by running the check command.
+We can confirm the Django container was properly created by running the `check` command.
 
 ```bash
 $ docker-compose exec web python manage.py check
@@ -112,16 +112,16 @@ You will be asked for `username`, `email` and `password`.
 
 ## Synchronizing data from the Placeholder API to our Database
 
-We need to run the django command `sync_fake_api_data`. You can run it many times as you wish.
+We need to run the Django command `sync_fake_api_data`. You can run it as many times as you wish.
 
-Internally it is creating the data if it not exists otherwise It will Insert or Update for objects not present in the database and look for differences with existing objects.
+Internally, it is creating the data if it does not exist; otherwise, It will insert objects not present in the database and search for differences with existing objects to update.
 
 ```bash
 $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
-### Optional
-Internally we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00, 01:00 CET time every day.
+### Setting Cronjobs (Optional Step)
+Internally, we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00 and 01:00 CET every day.
 
 ```bash
     '0 0 * * *',
@@ -133,26 +133,27 @@ Internally we Also set up some Cron Jobs that will run the synchronizing tasks a
     '>> /cron/django_cron.log 2>&1'
 ```
 
-You only need to indicate you want to add them in the container
+You only need to indicate that you want to add them to the container.
 
 ```bash
 $ docker-compose exec web python manage.py crontab add
 ```
 
-It is possible to check the logs for the Crontabs
+It is possible to check the logs for the Crontabs.
 
 ```bash
 $ docker-compose exec web cat /cron/django_cron.log
 ```
 
 ## Authentication
-The Project uses a Bearer Token Authentication based on JWT. All endpoints are protected So you need to generate an `access` token. It will last for 5 minutes. You can refresh that access token for 1 day only.
+The Project uses a Bearer Token Authentication based on JWT. All endpoints are protected, So you need to generate an `access` token. It will last for 5 minutes. You can refresh that access token for 1 day only.
+
+It is possible to modify the values in the `settings.py` file.
 
 ### Generate Access Token
 
-Request
-
 ```bash
+Request
     curl --location 'http://localhost:8000/api/token/' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -161,9 +162,8 @@ Request
     }'
 ```
 
-Response
-
 ```bash
+Response
     {
         "refresh": "eyJh ... eM3JZIg",
         "access": "eyJhb ... EqmQpdY"
@@ -172,9 +172,8 @@ Response
 
 ### Refresh Token
 
-Request
-
 ```bash
+Request
     curl --location 'http://localhost:8000/api/token/refresh/' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -183,16 +182,15 @@ Request
     }'
 ```
 
-Response
-
 ```bash
+Response
     {
         "access": "iuKnj ... SolSwRZ"
     }
 ```
 
 ### Bearer Token in the Header
-For all endpoints you will need to use `Authorization` Header.
+For all endpoints, you will need to use `Authorization` Header.
 
 ```bash
     curl --location 'http://localhost:8000/api/v1/posts/' \
@@ -201,21 +199,21 @@ For all endpoints you will need to use `Authorization` Header.
 
 
 ## Api Usage
-All items contains `created_at` and `updated_at` values. It indicates when where created and updated.
+All items contain `created_at` and `updated_at` values. It indicates the date when it was created and updated.
 
 ```bash
     "created_at": "2024-03-15T12:06:19.947938+01:00",
     "updated_at": "2024-03-15T12:54:41.036391+01:00"
 ```
 
-For `Posts` and `Comments`, when using succesfuly the methods `PUT`, `PATCH`, `DELETE`. All changes will be synchronized with the `Fake API` whene running `sync_fake_api_data` or the cronjobs are executed.
+For `Posts` and `Comments`, when using successfully the methods `PUT`, `PATCH` and `DELETE`. All changes will be synchronized with the `Fake API` results when running `sync_fake_api_data` or the cronjobs are executed (if those last ones were added).
 
 ```bash
 $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
 ### Posts
-The `external_id` is the `id` from the Source where it was imported, if it is `null` means it was created internally.
+The `external_id` is the `id` from the Source where it was imported; if it is, `null` means it was created internally.
 
 The `user_id` will contain `99999942` if it was created internally as well.
 
@@ -236,12 +234,12 @@ GET /api/v1/posts/1/
 PUT /api/v1/posts/1/
 ```
 
-Body
 ```bash
-{
-    "title": "editing title",
-    "body": "editing body",
-}
+Body
+    {
+        "title": "editing title",
+        "body": "editing body",
+    }
 ```
 
 #### Full/Partial Update
@@ -249,23 +247,23 @@ Body
 PATCH /api/v1/posts/1/
 ```
 
-Body
 ```bash
-{
-    "body": "partial edit",
-}
+Body
+    {
+        "body": "partial edit",
+    }
 ```
 
 ```bash
 POST /api/v1/posts/
 ```
 
-Body
 ```bash
-{
-    "title": "new post title",
-    "body": "new post body "
-}
+    Body
+    {
+        "title": "new post title",
+        "body": "new post body "
+    }
 ```
 
 #### Delete
@@ -296,14 +294,14 @@ GET /api/v1/comments/1/
 POST /api/v1/comments/
 ```
 
-Body
 ```bash
-{
-    "post": 2,
-    "name": "new comment name",
-    "email": "newemail@mail.com",
-    "body": "new comment body"
-}
+Body
+    {
+        "post": 2,
+        "name": "new comment name",
+        "email": "newemail@mail.com",
+        "body": "new comment body"
+    }
 ```
 
 #### Full/Partial Update
@@ -311,26 +309,26 @@ Body
 PUT /api/v1/comments/1/
 ```
 
-Body
 ```bash
-{
-    "post": 5,
-    "name": "edited new comment name",
-    "email": "editednewemail@mail.com",
-    "body": "edited new comment body"
-}
+Body
+    {
+        "post": 5,
+        "name": "edited new comment name",
+        "email": "editednewemail@mail.com",
+        "body": "edited new comment body"
+    }
 ```
 
 ```bash
 PATCH /api/v1/comments/1/
 ```
 
-Body
 ```bash
-{
-    "name": "edited new comment name",
-    "email": "editednewemail@mail.com",
-}
+Body
+    {
+        "name": "edited new comment name",
+        "email": "editednewemail@mail.com",
+    }
 ```
 
 #### Delete
