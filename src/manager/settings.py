@@ -137,12 +137,12 @@ SIMPLE_JWT = {
 CRONJOBS = [
     (
         '0 0 * * *',
-        'posts.tasks.sync_posts.syncronize_posts_task',
+        'posts.tasks.sync_posts.synchronize_posts_task',
         '>> /cron/django_cron.log 2>&1'
     ),
     (
         '0 1 * * *',
-        'posts.tasks.sync_comments.syncronize_comments_task',
+        'posts.tasks.sync_comments.synchronize_comments_task',
         '>> /cron/django_cron.log 2>&1'
     ),
 ]

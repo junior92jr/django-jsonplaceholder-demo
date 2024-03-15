@@ -13,9 +13,9 @@ from ..utils.transactions import (
 )
 
 
-class SyncronizerTestCase(ImportTestCase):
+class SynchronizerTestCase(ImportTestCase):
 
-    def set_post_syncronize_data(self, retrieved_posts: dict) -> None:
+    def set_post_synchronize_data(self, retrieved_posts: dict) -> None:
 
         post_bulk_create = PostBulkCreate(chunk_size=self.even_chunk_size)
         post_bulk_update = PostBulkUpdate(
@@ -27,9 +27,9 @@ class SyncronizerTestCase(ImportTestCase):
                 bulk_update=post_bulk_update
         )
 
-        post_importer.syncronize_data()
+        post_importer.synchronize_data()
 
-    def set_comments_syncronize_data(self, retrieved_comments: dict) -> None:
+    def set_comments_synchronize_data(self, retrieved_comments: dict) -> None:
 
         comment_bulk_create = CommentBulkCreate(
             chunk_size=self.even_chunk_size)
@@ -44,14 +44,14 @@ class SyncronizerTestCase(ImportTestCase):
             bulk_update=comment_bulk_update
         )
 
-        comment_importer.syncronize_data()
+        comment_importer.synchronize_data()
 
     def test_import_posts_success(self) -> None:
 
         self.assertEqual(Post.objects.all().count(), self.initial_count)
 
         retrieved_posts = self.get_posts_payload()
-        self.set_post_syncronize_data(retrieved_posts)
+        self.set_post_synchronize_data(retrieved_posts)
 
         posts_examples = Post.objects.all()
         self.assertEqual(posts_examples[0].user_id, 1)
@@ -83,7 +83,7 @@ class SyncronizerTestCase(ImportTestCase):
         self.assertEqual(posts_examples[1].body, 'body 2')
 
         retrieved_posts = self.get_updated_posts_payload()
-        self.set_post_syncronize_data(retrieved_posts)
+        self.set_post_synchronize_data(retrieved_posts)
 
         posts_examples = Post.objects.all()
         self.assertEqual(posts_examples[0].user_id, 1)
@@ -103,7 +103,7 @@ class SyncronizerTestCase(ImportTestCase):
         with self.assertRaises(ValueError) as catched_exception:
 
             retrieved_posts = self.get_invalid_posts_payload()
-            self.set_post_syncronize_data(retrieved_posts)
+            self.set_post_synchronize_data(retrieved_posts)
 
         self.assertEqual(ValueError, type(catched_exception.exception))
         self.assertEqual(Post.objects.all().count(), self.initial_count)
@@ -113,7 +113,7 @@ class SyncronizerTestCase(ImportTestCase):
         self.assertEqual(Comment.objects.all().count(), self.initial_count)
 
         retrieved_comments = self.get_comments_payload()
-        self.set_comments_syncronize_data(retrieved_comments)
+        self.set_comments_synchronize_data(retrieved_comments)
 
         self.assertEqual(Comment.objects.all().count(), self.initial_count)
 
@@ -126,7 +126,7 @@ class SyncronizerTestCase(ImportTestCase):
         self.assertEqual(Post.objects.all().count(), self.post_total_items)
 
         retrieved_comments = self.get_comments_payload()
-        self.set_comments_syncronize_data(retrieved_comments)
+        self.set_comments_synchronize_data(retrieved_comments)
 
         self.assertEqual(
             Comment.objects.all().count(), self.comment_total_items)
@@ -164,7 +164,7 @@ class SyncronizerTestCase(ImportTestCase):
         self.assertEqual(comment_examples[1].body, 'body 2')
 
         retrieved_comments = self.get_updated_comments_payload()
-        self.set_comments_syncronize_data(retrieved_comments)
+        self.set_comments_synchronize_data(retrieved_comments)
 
         comment_examples = Comment.objects.all()
         self.assertEqual(comment_examples[0].post.id, 1)
@@ -184,13 +184,13 @@ class SyncronizerTestCase(ImportTestCase):
         with self.assertRaises(ValueError) as catched_exception:
 
             retrieved_comments = self.get_invalid_comments_payload()
-            self.set_comments_syncronize_data(retrieved_comments)
+            self.set_comments_synchronize_data(retrieved_comments)
 
         self.assertEqual(ValueError, type(catched_exception.exception))
         self.assertEqual(Comment.objects.all().count(), self.initial_count)
 
 
-class BulkTransactionTestCase(SyncronizerTestCase):
+class BulkTransactionTestCase(SynchronizerTestCase):
 
     def test_post_bulk_create_transaction_rollback(self) -> None:
 

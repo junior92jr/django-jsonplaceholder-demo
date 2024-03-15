@@ -11,7 +11,7 @@ from posts.utils.transactions import (
 logger = logging.getLogger(__name__)
 
 
-def syncronize_comments_task() -> None:
+def synchronize_comments_task() -> None:
     """Task that sync comments from the database."""
 
     comments_handler = CommentsRequestHandler()
@@ -36,7 +36,7 @@ def syncronize_comments_task() -> None:
             bulk_update=comment_bulk_update
         )
 
-        comment_importer.syncronize_data()
+        comment_importer.synchronize_data()
 
         logger.info(
             f"{comment_bulk_create.total_inserted} 'Comment(s)' inserted.")
@@ -45,5 +45,5 @@ def syncronize_comments_task() -> None:
             f"{comment_bulk_update.total_updated} 'Comment(s)' updated.")
 
     except Exception as error:
-        logger.error(f"An error occurred when syncronizing 'Posts': {error}")
+        logger.error(f"An error occurred when synchronizing 'Posts': {error}")
         raise error

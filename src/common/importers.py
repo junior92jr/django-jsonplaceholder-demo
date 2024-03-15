@@ -80,7 +80,7 @@ class ObjectImporter(object):
                 continue
         self._bulk_update.done()
 
-    def syncronize_data(self) -> None:
+    def synchronize_data(self) -> None:
         """Method that sync object data into the database."""
 
         if not self._validate_objects():

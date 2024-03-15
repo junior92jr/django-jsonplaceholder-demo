@@ -11,7 +11,7 @@ from posts.utils.transactions import (
 logger = logging.getLogger(__name__)
 
 
-def syncronize_posts_task() -> None:
+def synchronize_posts_task() -> None:
     """Task that sync posts from the database."""
 
     posts_hanlder = PostsRequestHandler()
@@ -37,12 +37,12 @@ def syncronize_posts_task() -> None:
             bulk_update=post_bulk_update
         )
 
-        post_importer.syncronize_data()
+        post_importer.synchronize_data()
 
         logger.info(f"{post_bulk_create.total_inserted} 'Post(s)' inserted.")
 
         logger.info(f"{post_bulk_update.total_updated} 'Post(s)' updated.")
 
     except Exception as error:
-        logger.error(f"An error occurred when syncronizing 'Posts': {error}")
+        logger.error(f"An error occurred when synchronizing 'Posts': {error}")
         raise error

@@ -1,6 +1,6 @@
 # Rest Service for Placeholder Fake Api
 
-This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally it includes a way to syncronize the data constantly.
+This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally it includes a way to synchronize the data constantly.
 
 ## Tech Stacks
 * Python 3.11
@@ -39,6 +39,10 @@ $ cd posts_service/
 $ docker-compose build
 ```
 
+```bash
+$ docker-compose up
+```
+
 This will build two images:
 
 - `django-app` image with the Django App.
@@ -65,6 +69,11 @@ and starting a psql console.
 
 ```bash
 $ docker-compose exec web-db psql -U postgres
+
+psql (16.2)
+Type "help" for help.
+
+postgres=#
 ```
 
 ### Check Django container is running
@@ -73,6 +82,8 @@ We can confirm that django container was properly created by running the check c
 
 ```bash
 $ docker-compose exec web python manage.py check
+
+System check identified no issues (0 silenced).
 ```
 
 ### Import Placeholder API data
@@ -87,12 +98,19 @@ We would need the `User` to be able to authenticate and access the Rest Service 
 
 ```bash
 $ docker-compose exec web python manage.py createsuperuser
+
+Username (leave blank to use 'root'): admin
+Email address: admin@mail.com
+Password: admin_pass
+Password (again): admin_pass
+
+Superuser created successfully.
 ```
 
 You will be asked for `username`, `email` and `password`.
 
 
-## Syncronizing data from the Placeholder API to our Database
+## Synchronizing data from the Placeholder API to our Database
 
 We need to run the django command `sync_fake_api_data`. You can run it many times as you wish.
 
@@ -102,22 +120,30 @@ Internally it is creating the data if it not exists otherwise It will Insert or 
 $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
-Internally we Also set up some Cron Jobs that will run the syncronizing tasks at 00:00, 01:00 CET time every day.
+Internally we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00, 01:00 CET time every day.
 
 ```bash
     '0 0 * * *',
-    'posts.tasks.sync_posts.syncronize_posts_task',
+    'posts.tasks.sync_posts.synchronize_posts_task',
     '>> /cron/django_cron.log 2>&1'
 
     '0 1 * * *',
-    'posts.tasks.sync_comments.syncronize_comments_task',
+    'posts.tasks.sync_comments.synchronize_comments_task',
     '>> /cron/django_cron.log 2>&1'
+```
+
+It is possible to check the logs for the Crontabs
+
+```bash
+$ docker-compose exec web cat /cron/django_cron.log
 ```
 
 ## Authentication
 The Project uses a Bearer Token Authentication based on JWT. All endpoints are protected So you need to generate an `access` token. It will last for 5 minutes. You can refresh that access token for 1 day only.
 
 ### Generate Access Token
+
+Request
 
 ```bash
     curl --location 'http://localhost:8000/api/token/' \
@@ -128,6 +154,8 @@ The Project uses a Bearer Token Authentication based on JWT. All endpoints are p
     }'
 ```
 
+Response
+
 ```bash
     {
         "refresh": "eyJh ... eM3JZIg",
@@ -137,6 +165,8 @@ The Project uses a Bearer Token Authentication based on JWT. All endpoints are p
 
 ### Refresh Token
 
+Request
+
 ```bash
     curl --location 'http://localhost:8000/api/token/refresh/' \
     --header 'Content-Type: application/json' \
@@ -145,6 +175,8 @@ The Project uses a Bearer Token Authentication based on JWT. All endpoints are p
 
     }'
 ```
+
+Response
 
 ```bash
     {
