@@ -120,6 +120,8 @@ Internally, it is creating the data if it does not exist; otherwise, It will ins
 $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
+We synchronize the objects in the database with `BULK CREATE` and `BULK UPDATE` Transactions to ensure ACIDity, handle rollbacks and avoiding multiple writes to the database.
+
 ### Setting Cronjobs (Optional Step)
 Internally, we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00 and 01:00 CET every day.
 
@@ -196,7 +198,6 @@ For all endpoints, you will need to use `Authorization` Header.
     curl --location 'http://localhost:8000/api/v1/posts/' \
     --header 'Authorization: Bearer eyJhb...EqmQpdY'
 ```
-
 
 ## Api Usage
 All items contain `created_at` and `updated_at` values. It indicates the date when it was created and updated.
@@ -334,4 +335,11 @@ Body
 #### Delete
 ```bash
 DELETE /api/v1/comments/1/
+```
+
+## Running Test
+For running the test, we use Django testing tools and a testing database in memory database.
+
+```bash
+docker-compose exec web python manage.py test --settings=manager.test_settings
 ```
