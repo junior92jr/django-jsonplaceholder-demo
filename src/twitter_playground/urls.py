@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 
 
-from posts.apps import PostsConfig
+from tweets.apps import TweetsConfig
 
 
 urlpatterns = [
@@ -14,6 +14,6 @@ urlpatterns = [
     path('api/token/refresh/',
          jwt_views.TokenRefreshView.as_view(),
          name='token_refresh'),
-    path('api/v1/', include(
-        ('posts.urls', PostsConfig.name), namespace='posts')),
+    path('api/v1/tweets/', include(
+        ('tweets.urls', TweetsConfig.name), namespace='tweets')),
 ]

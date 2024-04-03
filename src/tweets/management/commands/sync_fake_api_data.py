@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from posts.tasks import sync_posts, sync_comments
+from tweets.tasks import sync_posts, sync_comments
 
 
 class Command(BaseCommand):

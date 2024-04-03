@@ -1,6 +1,15 @@
 # Rest Service for Placeholder Fake Api
 
-This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally, it includes a way to constantly synchronize the data.
+This Rest Service creates a simple REST API to interact with the `Fake API in JSONPlaceholder - Free Fake REST API`. Additionally, it includes a way to constantly synchronize the data. The ain is to create a playground version of a very common functionalities in social networks.
+
+# Roadmap
+* Seed Project setup (complete)
+* Generic Bulk Import and Update for Objects (complete)
+* Importing `Post` and `Comments` as initial set of data (complete)
+* User Authentication and protected endpoints (complete)
+* Implement `User` import and followers logic (in process)
+* Implement like logic in `Post` and `Comments`
+* Implement Graph traverse to find most popular post on a user network at any depth
 
 ## Tech Stacks
 * Python 3.11
@@ -122,30 +131,6 @@ $ docker-compose exec web python manage.py sync_fake_api_data
 
 We synchronize the objects in the database with `BULK CREATE` and `BULK UPDATE` Transactions to ensure ACIDity, handle rollbacks and avoiding multiple writes to the database.
 
-### Setting Cronjobs (Optional Step)
-Internally, we Also set up some Cron Jobs that will run the synchronizing tasks at 00:00 and 01:00 CET every day.
-
-```bash
-    '0 0 * * *',
-    'posts.tasks.sync_posts.synchronize_posts_task',
-    '>> /cron/django_cron.log 2>&1'
-
-    '0 1 * * *',
-    'posts.tasks.sync_comments.synchronize_comments_task',
-    '>> /cron/django_cron.log 2>&1'
-```
-
-You only need to indicate that you want to add them to the container.
-
-```bash
-$ docker-compose exec web python manage.py crontab add
-```
-
-It is possible to check the logs for the Crontabs.
-
-```bash
-$ docker-compose exec web cat /cron/django_cron.log
-```
 
 ## Authentication
 The Project uses a Bearer Token Authentication based on JWT. All endpoints are protected, So you need to generate an `access` token. It will last for 5 minutes. You can refresh that access token for 1 day only.
@@ -214,38 +199,23 @@ $ docker-compose exec web python manage.py sync_fake_api_data
 ```
 
 ### Posts
-The `external_id` is the `id` from the Source where it was imported; if it is, `null` means it was created internally.
-
-The `user_id` will contain `99999942` if it was created internally as well.
+The `external_id` is the `id` from the Source where it was imported.
 
 #### List All
 ```bash
-GET /api/v1/posts/
-GET /api/v1/posts/?external_id=1
-GET /api/v1/posts/?external_id=1&user_id=1
-GET /api/v1/posts/?user_id=1
+GET /api/v1/tweets/posts/
+GET /api/v1/tweets/posts/?external_id=1
+GET /api/v1/tweets/posts/?external_id=1&user_id=1
+GET /api/v1/tweets/posts/?user_id=1
 ```
 #### Retrieve by ID
 ```bash
-GET /api/v1/posts/1/
-```
-
-#### Create
-```bash
-PUT /api/v1/posts/1/
-```
-
-```bash
-Body
-    {
-        "title": "editing title",
-        "body": "editing body",
-    }
+GET /api/v1/tweets/posts/1/
 ```
 
 #### Full/Partial Update
 ```bash
-PATCH /api/v1/posts/1/
+PATCH /api/v1/tweets/posts/1/
 ```
 
 ```bash
@@ -256,7 +226,7 @@ Body
 ```
 
 ```bash
-POST /api/v1/posts/
+POST /api/v1/tweets/posts/
 ```
 
 ```bash
@@ -269,7 +239,7 @@ Body
 
 #### Delete
 ```bash
-DELETE /api/v1/posts/1/
+DELETE /api/v1/tweets/posts/1/
 ```
 
 ### Comments
@@ -279,35 +249,20 @@ The `post` is the `pk` in the database for the existing Post.
 #### List All
 
 ```bash
-GET /api/v1/comments/
-GET /api/v1/comments/?external_id=1
-GET /api/v1/comments/?post=4
-GET /api/v1/comments/?external_id=1&post=4
+GET /api/v1/tweets/comments/
+GET /api/v1/tweets/comments/?external_id=1
+GET /api/v1/tweets/comments/?post=4
+GET /api/v1/tweets/comments/?external_id=1&post=4
 ```
 
 #### Retrieve by ID
 ```bash
-GET /api/v1/comments/1/
-```
-
-#### Create
-```bash
-POST /api/v1/comments/
-```
-
-```bash
-Body
-    {
-        "post": 2,
-        "name": "new comment name",
-        "email": "newemail@mail.com",
-        "body": "new comment body"
-    }
+GET /api/v1/tweets/comments/1/
 ```
 
 #### Full/Partial Update
 ```bash
-PUT /api/v1/comments/1/
+PUT /api/v1/tweets/comments/1/
 ```
 
 ```bash
@@ -321,7 +276,7 @@ Body
 ```
 
 ```bash
-PATCH /api/v1/comments/1/
+PATCH /api/v1/tweets/comments/1/
 ```
 
 ```bash
@@ -334,12 +289,12 @@ Body
 
 #### Delete
 ```bash
-DELETE /api/v1/comments/1/
+DELETE /api/v1/tweets/comments/1/
 ```
 
 ## Running Test
 For running the test, we use Django testing tools and a testing database in memory database.
 
 ```bash
-docker-compose exec web python manage.py test --settings=manager.test_settings
+docker-compose exec web python manage.py test --settings=twitter_playground.test_settings
 ```

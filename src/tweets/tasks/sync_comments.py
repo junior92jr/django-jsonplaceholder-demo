@@ -1,8 +1,8 @@
 import logging
 
-from posts.utils.api_clients import CommentsRequestHandler
-from posts.utils.importers import CommentImporter
-from posts.utils.transactions import (
+from tweets.utils.api_clients import CommentsRequestHandler
+from tweets.utils.importers import CommentImporter
+from tweets.utils.transactions import (
     CommentBulkCreate,
     CommentBulkUpdate,
 )

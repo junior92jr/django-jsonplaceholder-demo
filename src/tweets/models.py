@@ -7,8 +7,8 @@ from common.models import BaseAppModel
 class Post(BaseAppModel):
     """Model that represents Posts in the database."""
 
-    external_id = models.IntegerField(null=True)
-    user_id = models.IntegerField(default=settings.DEFAULT_EXTERNAL_USER_ID)
+    external_id = models.IntegerField(unique=True)
+    user_id = models.IntegerField()
     title = models.TextField()
     body = models.TextField()
 
@@ -19,7 +19,7 @@ class Post(BaseAppModel):
 class Comment(BaseAppModel):
     """Model that represents Comment in the database."""
 
-    external_id = models.IntegerField(null=True)
+    external_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=240)
     email = models.EmailField(max_length=254, unique=True)
     body = models.TextField()

@@ -1,8 +1,8 @@
 import logging
 
-from posts.utils.api_clients import PostsRequestHandler
-from posts.utils.importers import PostImporter
-from posts.utils.transactions import (
+from tweets.utils.api_clients import PostsRequestHandler
+from tweets.utils.importers import PostImporter
+from tweets.utils.transactions import (
     PostBulkCreate,
     PostBulkUpdate
 )

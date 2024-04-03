@@ -13,18 +13,18 @@ class ImportTestCase(TestCase):
         self.even_chunk_size = 100
 
     def get_posts_payload(self) -> dict:
-        return json.load(open('posts/tests/resources/mocks/posts.json'))
+        return json.load(open('tweets/tests/resources/mocks/posts.json'))
 
     def get_comments_payload(self) -> dict:
-        return json.load(open('posts/tests/resources/mocks/comments.json'))
+        return json.load(open('tweets/tests/resources/mocks/comments.json'))
 
     def get_updated_posts_payload(self) -> dict:
         return json.load(open(
-            'posts/tests/resources/mocks/updated_posts.json'))
+            'tweets/tests/resources/mocks/updated_posts.json'))
 
     def get_updated_comments_payload(self) -> dict:
         return json.load(open(
-            'posts/tests/resources/mocks/updated_comments.json'))
+            'tweets/tests/resources/mocks/updated_comments.json'))
 
     def get_invalid_posts_payload(self) -> dict:
         return "whatever"

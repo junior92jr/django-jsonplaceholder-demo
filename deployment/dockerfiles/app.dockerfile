@@ -20,10 +20,6 @@ RUN pip install pip --upgrade \
 
 COPY deployment/scripts /app/deployment/scripts
 
-# django-crontab logfile
-RUN mkdir /cron
-RUN touch /cron/django_cron.log
-
 RUN chmod -R +x /app/deployment/scripts/*
 
 COPY src/ ./

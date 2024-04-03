@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'django_crontab',
-    'posts',
+    'tweets',
 ]
 
 MIDDLEWARE = [
@@ -41,7 +41,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'manager.urls'
+ROOT_URLCONF = 'twitter_playground.urls'
 
 TEMPLATES = [
     {
@@ -59,7 +59,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'manager.wsgi.application'
+WSGI_APPLICATION = 'twitter_playground.wsgi.application'
 
 
 # Database
