@@ -22,7 +22,7 @@ class Post(BaseAppModel):
         body (TextField): The content/body of the post.
     """
 
-    external_id = models.PositiveIntegerField(unique=True)
+    external_id = models.PositiveIntegerField(unique=True, blank=True, null=True)
     user_id = models.PositiveIntegerField(default=default_user_id)
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -46,7 +46,7 @@ class Comment(BaseAppModel):
         post (ForeignKey): The related Post this comment belongs to.
     """
 
-    external_id = models.PositiveIntegerField(unique=True)
+    external_id = models.PositiveIntegerField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     body = models.TextField()
