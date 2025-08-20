@@ -28,5 +28,8 @@ django-stubs==5.2.2
 # Faker for generating test data in runtime (optional)
 faker==37.4.2
 
+# HTTP client for making API requests
+requests==2.32.5
+
 # Include dev requirements separately
 -r dev-requirements.txt

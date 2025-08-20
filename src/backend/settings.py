@@ -25,10 +25,11 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_filters",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
-    "tweets",
+    "content",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

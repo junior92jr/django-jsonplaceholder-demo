@@ -203,19 +203,19 @@ The `external_id` is the `id` from the Source where it was imported.
 
 #### List All
 ```bash
-GET /api/v1/tweets/posts/
-GET /api/v1/tweets/posts/?external_id=1
-GET /api/v1/tweets/posts/?external_id=1&user_id=1
-GET /api/v1/tweets/posts/?user_id=1
+GET /api/v1/content/posts/
+GET /api/v1/content/posts/?external_id=1
+GET /api/v1/content/posts/?external_id=1&user_id=1
+GET /api/v1/content/posts/?user_id=1
 ```
 #### Retrieve by ID
 ```bash
-GET /api/v1/tweets/posts/1/
+GET /api/v1/content/posts/1/
 ```
 
 #### Full/Partial Update
 ```bash
-PATCH /api/v1/tweets/posts/1/
+PATCH /api/v1/content/posts/1/
 ```
 
 ```bash
@@ -226,7 +226,7 @@ Body
 ```
 
 ```bash
-POST /api/v1/tweets/posts/
+POST /api/v1/content/posts/
 ```
 
 ```bash
@@ -239,7 +239,7 @@ Body
 
 #### Delete
 ```bash
-DELETE /api/v1/tweets/posts/1/
+DELETE /api/v1/content/posts/1/
 ```
 
 ### Comments
@@ -249,20 +249,20 @@ The `post` is the `pk` in the database for the existing Post.
 #### List All
 
 ```bash
-GET /api/v1/tweets/comments/
-GET /api/v1/tweets/comments/?external_id=1
-GET /api/v1/tweets/comments/?post=4
-GET /api/v1/tweets/comments/?external_id=1&post=4
+GET /api/v1/content/comments/
+GET /api/v1/content/comments/?external_id=1
+GET /api/v1/content/comments/?post=4
+GET /api/v1/content/comments/?external_id=1&post=4
 ```
 
 #### Retrieve by ID
 ```bash
-GET /api/v1/tweets/comments/1/
+GET /api/v1/content/comments/1/
 ```
 
 #### Full/Partial Update
 ```bash
-PUT /api/v1/tweets/comments/1/
+PUT /api/v1/content/comments/1/
 ```
 
 ```bash
@@ -276,7 +276,7 @@ Body
 ```
 
 ```bash
-PATCH /api/v1/tweets/comments/1/
+PATCH /api/v1/content/comments/1/
 ```
 
 ```bash
@@ -289,7 +289,7 @@ Body
 
 #### Delete
 ```bash
-DELETE /api/v1/tweets/comments/1/
+DELETE /api/v1/content/comments/1/
 ```
 
 ## Running Test
